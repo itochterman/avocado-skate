@@ -115,7 +115,7 @@ body {
   position: absolute;
   left: 0;
   right: 0;
-  top: 50%;
+  top: 46%;
   transform: translateY(-50%);
   height: 6px;
   background: repeating-linear-gradient(90deg,
