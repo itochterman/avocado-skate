@@ -91,6 +91,14 @@ const AvocadoSkate = () => {
           {/* Contact placeholder */}
           <div className="contact-section">
             <p className="contact-text">646-382-8636</p>
+            <a href="https://instagram.com/avocadoskate" target="_blank" rel="noopener noreferrer" className="instagram-link">
+              <svg className="instagram-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="2" />
+                <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
+                <circle cx="18" cy="6" r="1.5" fill="currentColor" />
+              </svg>
+              <span>@avocadoskate</span>
+            </a>
             <p className="contact-subtext">SF Bay Area</p>
           </div>
         </div>
