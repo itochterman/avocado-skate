@@ -3,108 +3,137 @@ import './AvocadoSkate.css';
 
 const AvocadoSkate = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [activeVideo, setActiveVideo] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     setIsLoaded(true);
+
+    // Force all videos to load their first frame
+    setTimeout(() => {
+      const videos = document.querySelectorAll('.grid-video');
+      videos.forEach(video => {
+        video.load();
+      });
+    }, 100);
   }, []);
 
+  // Video durations in seconds (approximate)
+  const videoDurations = [8, 8, 8, 60, 8];
+
+  // Cycle through videos based on their actual duration
+  useEffect(() => {
+    if (isPaused) return; // Don't cycle if paused
+
+    const duration = videoDurations[activeVideo] * 1000; // Convert to ms
+    const timeout = setTimeout(() => {
+      setActiveVideo((prev) => (prev + 1) % 5);
+    }, duration);
+    return () => clearTimeout(timeout);
+  }, [activeVideo, isPaused]);
+
+  // Handle video click - switch to that video and unpause
+  const handleVideoClick = (videoIndex) => {
+    setActiveVideo(videoIndex);
+    setIsPaused(false);
+  };
+
+  // Pause/play videos based on active state
+  useEffect(() => {
+    const videos = document.querySelectorAll('.grid-video');
+    videos.forEach((video, index) => {
+      if (index === activeVideo) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+  }, [activeVideo]);
+
   return (
-    <div className="avocado-container">
-      <div className={`poster ${isLoaded ? 'loaded' : ''}`}>
+    <div className="zine-container">
+      <div className={`zine-layout ${isLoaded ? 'loaded' : ''}`}>
 
-        {/* Top Half - Skate Photo Gallery */}
-        <div className="photo-section">
-          <div className="photo-gallery">
-            <img
-              src="/skate-photo-1.jpg"
-              alt="Skater in action"
-              className="skate-photo"
-            />
-            <img
-              src="/skate-photo-2.jpg"
-              alt="Skater in action"
-              className="skate-photo"
-            />
-            <img
-              src="/skate-photo-3.jpg"
-              alt="Skater in action"
-              className="skate-photo"
-            />
+        {/* Video grid with cycling active video */}
+        <div className="video-grid">
+          <video
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className={`grid-video v1 ${activeVideo === 0 ? 'active' : ''}`}
+            onClick={() => handleVideoClick(0)}
+          >
+            <source src="/skate-clip-1.mp4" type="video/mp4" />
+          </video>
+
+          <video
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className={`grid-video v2 ${activeVideo === 1 ? 'active' : ''}`}
+            onClick={() => handleVideoClick(1)}
+          >
+            <source src="/skate-clip-2.mp4" type="video/mp4" />
+          </video>
+
+          <video
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className={`grid-video v3 ${activeVideo === 2 ? 'active' : ''}`}
+            onClick={() => handleVideoClick(2)}
+          >
+            <source src="/skate-clip-3.mp4" type="video/mp4" />
+          </video>
+
+          <video
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className={`grid-video v4 ${activeVideo === 3 ? 'active' : ''}`}
+            onClick={() => handleVideoClick(3)}
+          >
+            <source src="/skate-clip-4.mp4" type="video/mp4" />
+          </video>
+
+          <video
+            loop
+            muted
+            playsInline
+            preload="auto"
+            className={`grid-video v5 ${activeVideo === 4 ? 'active' : ''}`}
+            onClick={() => handleVideoClick(4)}
+          >
+            <source src="/skate-clip-5.mp4" type="video/mp4" />
+          </video>
+
+          {/* Info block takes grid space */}
+          <div className="info-grid-block">
+            <h1 className="brand-title">
+              <span className="avocado-word">AVOCADO</span>
+              <span className="skate-word">SKATE</span>
+            </h1>
+            <p className="tagline">SKATE LESSONS FOR EVERYONE</p>
+
+            <div className="contact-info">
+              <p className="phone">646-382-8636</p>
+              <a href="https://instagram.com/avocadoskate" target="_blank" rel="noopener noreferrer" className="ig-link">
+                <svg viewBox="0 0 24 24" className="ig-icon">
+                  <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="2" fill="none" />
+                  <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" fill="none" />
+                  <circle cx="18" cy="6" r="1.5" fill="currentColor" />
+                </svg>
+                @avocadoskate
+              </a>
+              <p className="location">SF BAY AREA</p>
+            </div>
           </div>
         </div>
 
-        {/* Bottom Half - Avocado Info */}
-        <div className="info-section">
-          {/* Avocado SVG with skateboard */}
-          <div className="avocado-graphic">
-            <svg viewBox="-20 0 240 300" className="avocado-svg">
-              {/* Avocado body */}
-              <ellipse cx="100" cy="140" rx="70" ry="90" fill="#5D8A3A" className="avocado-body" />
-              <ellipse cx="100" cy="140" rx="50" ry="70" fill="#C4D96F" className="avocado-flesh" />
-              {/* Pit */}
-              <circle cx="100" cy="140" r="25" fill="#8B5A3C" className="avocado-pit" />
-              {/* Skateboard under avocado */}
-              <g className="skateboard">
-                <rect x="60" y="255" width="80" height="8" rx="4" fill="#1a1a1a" />
-                <circle cx="70" cy="267" r="4" fill="#FF6B35" />
-                <circle cx="130" cy="267" r="4" fill="#FF6B35" />
-              </g>
-            </svg>
-          </div>
-
-          {/* Main title */}
-          <h1 className="main-title">
-            <span className="title-word avocado">AVOCADO</span>
-            <span className="title-word skate">SKATE</span>
-          </h1>
-
-          {/* Motto */}
-          <div className="motto">
-            <span className="motto-text">SKATE ONE</span>
-            <span className="motto-divider">●</span>
-            <span className="motto-text">SKATE ALL</span>
-          </div>
-
-          {/* Info sections */}
-          <div className="info-grid">
-            <div className="info-box">
-              <h3>ALL AGES</h3>
-              <p>Youth to wisdom</p>
-            </div>
-
-            <div className="info-box highlight">
-              <h3>SAFETY FIRST</h3>
-              <p>Accessible & inclusive</p>
-            </div>
-
-            <div className="info-box">
-              <h3>SLIDING SCALE</h3>
-              <p>Pay what you can</p>
-            </div>
-
-            <div className="info-box">
-              <h3>ALL LEVELS</h3>
-              <p>Beginner to advanced</p>
-            </div>
-          </div>
-
-          {/* Contact placeholder */}
-          <div className="contact-section">
-            <p className="contact-text">646-382-8636</p>
-            <a href="https://instagram.com/avocadoskate" target="_blank" rel="noopener noreferrer" className="instagram-link">
-              <svg className="instagram-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="2" />
-                <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2" />
-                <circle cx="18" cy="6" r="1.5" fill="currentColor" />
-              </svg>
-              <span>@avocadoskate</span>
-            </a>
-            <p className="contact-subtext">SF Bay Area</p>
-          </div>
-        </div>
-
-        {/* Decorative elements */}
-        <div className="decorative-line divider-line"></div>
       </div>
     </div>
   );
